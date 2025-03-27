@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-istio-demo
+  namespace: nginx-istio
+spec:
+  template:
+    metadata:
+      name: nginx-istio
+      labels:
+       app: nginx-istio-demo
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          protocol: TCP
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-istio-demo
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: nginx-istio-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+      - "nginx-istio.demo"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: nginx-app-virtual-service
+spec:
+  hosts:
+  - "nginx-istio.demo"
+  gateways:
+  - "nginx-istio-gateway"
+  http:
+  - route:
+    - destination:
+        host: nginx-istio-demo
+        port:
+          number: 80
+ 

@@ -1,0 +1,148 @@
+##################################################################################################
+# Details service
+##################################################################################################
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: details
+  namespace: bookinfo
+  labels:
+    app: details
+    service: details
+spec:
+  ports:
+  - port: 9080
+    name: http
+  selector:
+    app: details
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: bookinfo-details
+  namespace: bookinfo
+  labels:
+    account: details
+##################################################################################################
+# Ratings service
+##################################################################################################
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ratings
+  namespace: bookinfo
+  labels:
+    app: ratings
+    service: ratings
+spec:
+  ports:
+  - port: 9080
+    name: http
+  selector:
+    app: ratings
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: bookinfo-ratings
+  namespace: bookinfo
+  labels:
+    account: ratings
+##################################################################################################
+# Reviews service
+##################################################################################################
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reviews
+  namespace: bookinfo
+  labels:
+    app: reviews
+    service: reviews
+spec:
+  ports:
+  - port: 9080
+    name: http
+  selector:
+    app: reviews
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: bookinfo-reviews
+  namespace: bookinfo
+  labels:
+    account: reviews
+##################################################################################################
+# Productpage services
+##################################################################################################
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: productpage
+  namespace: bookinfo
+  labels:
+    app: productpage
+    service: productpage
+spec:
+  ports:
+  - port: 9080
+    name: http
+  selector:
+    app: productpage
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: bookinfo-productpage
+  namespace: bookinfo
+  labels:
+    account: productpage
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: bookinfo-gateway
+  namespace: bookinfo
+spec:
+  gatewayClassName: istio
+  listeners:
+  - name: http
+    port: 80
+    protocol: HTTP
+    allowedRoutes:
+      namespaces:
+        from: Same
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: bookinfo
+  namespace: bookinfo
+spec:
+  parentRefs:
+  - name: bookinfo-gateway
+  rules:
+  - matches:
+    - path:
+        type: Exact
+        value: /productpage
+    - path:
+        type: PathPrefix
+        value: /static
+    - path:
+        type: Exact
+        value: /login
+    - path:
+        type: Exact
+        value: /logout
+    - path:
+        type: PathPrefix
+        value: /api/v1/products
+    backendRefs:
+    - name: productpage
+      port: 9080
