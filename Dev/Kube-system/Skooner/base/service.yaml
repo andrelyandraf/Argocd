@@ -1,0 +1,12 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: skooner
+  namespace: kube-system
+spec:
+  type: NodePort
+  ports:
+    - port: 4654
+  selector:
+    k8s-app: skooner
