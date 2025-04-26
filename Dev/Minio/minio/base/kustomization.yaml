@@ -1,9 +1,9 @@
 resources:
   - deployment.yaml
   - service.yaml
-  - configmap.yaml
+
 commonLabels:
-  app: grafana
+  name: minio
 
 commonAnnotations:
   prometheus.io/scrape: 'true'

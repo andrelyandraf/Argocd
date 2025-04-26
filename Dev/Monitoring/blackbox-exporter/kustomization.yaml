@@ -1,7 +1,7 @@
 resources:
-  - deployment.yaml
-  - service.yaml
-  - configmap.yaml
+  - base/deployment.yaml
+  - base/service.yaml
+  - base/configmap.yaml
 
 commonLabels:
   app.kubernetes.io/component: exporter

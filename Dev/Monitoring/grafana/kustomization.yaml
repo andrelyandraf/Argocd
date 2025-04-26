@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - base/deployment.yaml
+  - base/service.yaml
+  - base/configmap.yaml
+commonLabels:
+  app: grafana
+
+commonAnnotations:
+  prometheus.io/scrape: 'true'
+  prometheus.io/port: '3000'
+  metallb.universe.tf/allow-shared-ip: "key-to-share-1.2.3.4"

@@ -1,0 +1,3 @@
+resources:
+  - eck.yaml
+  - crds.yaml
